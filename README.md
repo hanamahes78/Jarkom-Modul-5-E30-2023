@@ -184,7 +184,7 @@ Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutu
   	netmask 255.255.252.0
   	gateway 192.221.4.1
   ```
-  - **Stark (Web Server)**
+- **Stark (Web Server)**
   ```
   #A6 Stark-Frieren
   auto eth0
@@ -193,7 +193,7 @@ Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutu
   	netmask 255.255.255.252
   	gateway 192.221.0.13
   ```
-  - **Client**
+- **Client**
   ```
   auto eth0
   iface eth0 inet dhcp
@@ -236,6 +236,169 @@ Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutu
   
   route add -net 192.221.4.0 netmask 255.255.252.0 gw 192.221.0.22	#A10Sein,GrobeForest
   route add -net 192.221.8.0 netmask 255.255.248.0 gw 192.221.0.22	#A9TurkRegion
+  ```
+
+## **Script**
+- **Heiter, Himmel (DHCP Relay)**
+  <br>Pada Heiter dan Himmel install `apt-get install isc-dhcp-relay -y`. Kemudian edit server dengan mengarahkan dhcp-relay menuju Revolte `192.221.0.2` lalu tambahkan interfaces. Enable IP forwarding dengan uncoment `net.ipv4.ip_forward=1` dan lakukan `service isc-dhcp-relay start`.
+  ```
+  echo "nameserver 192.168.122.1" > /etc/resolv.conf
+  
+  apt-get update
+  echo "" | apt-get install isc-dhcp-relay -y
+  
+  echo -e '
+  # Defaults for isc-dhcp-relay initscript
+  # sourced by /etc/init.d/isc-dhcp-relay
+  # installed at /etc/default/isc-dhcp-relay by the maintainer scripts
+  
+  #
+  # This is a POSIX shell fragment
+  #
+  
+  # What servers should the DHCP relay forward requests to?
+  SERVERS="192.221.0.2"
+  
+  # On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+  INTERFACES="eth0 eth1 eth2 eth3"
+  
+  # Additional options that are passed to the DHCP relay daemon?
+  OPTIONS=""
+  ' > /etc/default/isc-dhcp-relay
+  
+  echo 'net.ipv4.ip_forward=1
+  ' > /etc/default/sysctl.conf
+  
+  service isc-dhcp-relay restart
+  ```
+- **Richter (DNS Server)**
+  <br>Pada Richter, install bind9 dengan `apt-get install bind9 -y`, kemudian masukkan nameserver. Lakukan service bind9 start.
+  ```
+  echo "nameserver 192.168.122.1" > /etc/resolv.conf
+  
+  apt-get update
+  apt-get install bind9 -y
+  
+  echo -e '
+  options {
+          directory "/var/cache/bind";
+  
+          // If there is a firewall between you and nameservers you want
+          // to talk to, you may need to fix the firewall to allow multiple
+          // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+             forwarders {
+                  192.168.122.1;
+             };
+  
+          //========================================================================
+          // If BIND logs error messages about the root key being expired,
+          // you will need to update your keys.  See https://www.isc.org/bind-keys
+          //========================================================================
+          //dnssec-validation auto;
+          allow-query{any;};
+          auth-nxdomain no;    # conform to RFC1035
+          listen-on-v6 { any; };
+  };
+  ' > /etc/bind/named.conf.options
+  
+  service bind9 start
+  ```
+- **Revolte (DHCP Server)**
+  <br>Pada Revolte, edit file `/etc/default/isc-dhcp-server`, dengan menambahkan `INTERFACES="eth0"`. Pada dhcp-server isikan data pada `/etc/dhcp/dhcpd.conf`, lalu lakukan `service isc-dhcp-server restart`.
+  ```
+  echo "nameserver 192.168.122.1" > /etc/resolv.conf
+  
+  apt-get update
+  apt-get install isc-dhcp-server -y
+  
+  echo -e '
+  INTERFACES="eth0"
+  ' > /etc/default/isc-dhcp-server
+  
+  echo -e '
+  option domain-name "example.org";
+  option domain-name-servers ns1.example.org, ns2.example.org;
+  default-lease-time 600;
+  max-lease-time 7200;
+  
+  ddns-update-style none;
+  
+  #A4 LaubHills
+  subnet 192.221.2.0 netmask 255.255.254.0 {
+          range 192.221.2.2 192.221.3.254;
+          option routers 192.221.2.1;
+          option broadcast-address 192.221.3.255;
+          option domain-name-servers 192.221.0.6;
+          default-lease-time 600;
+          max-lease-time 7200;
+  }
+  
+  #A3 SchwerMountain
+  subnet 192.221.0.128 netmask 255.255.255.128 {
+          range 192.221.0.130 192.221.0.254;
+          option routers 192.221.0.129;
+          option broadcast-address 192.221.0.255;
+          option domain-name-servers 192.221.0.6;
+          default-lease-time 600;
+          max-lease-time 7200;
+  }
+  
+  #A9 TurkRegion
+  subnet 192.221.8.0 netmask 255.255.248.0 {
+          range 192.221.8.2 192.221.15.254;
+          option routers 192.221.8.1;
+          option broadcast-address 192.221.15.255;
+          option domain-name-servers 192.221.0.6;
+          default-lease-time 600;
+          max-lease-time 7200;
+  }
+  
+  #A10 GrobeForest
+  subnet 192.221.4.0 netmask 255.255.252.0 {
+          range 192.221.4.2 192.221.7.254;
+          option routers 192.221.4.1;
+          option broadcast-address 192.221.7.255;
+          option domain-name-servers 192.221.0.6;
+          default-lease-time 600;
+          max-lease-time 7200;
+  }
+  
+  #A1 Routing dari Revolte ke router
+  subnet 192.221.0.0 netmask 255.255.255.252 {
+          option routers 192.221.0.1;
+  }
+  
+  #A1
+  subnet 192.221.0.0 netmask 255.255.255.252 {}
+  
+  #A2
+  subnet 192.221.0.4 netmask 255.255.255.252 {}
+  
+  #A5
+  subnet 192.221.0.8 netmask 255.255.255.252 {}
+  
+  #A6
+  subnet 192.221.0.12 netmask 255.255.255.252 {}
+  
+  #A7
+  subnet 192.221.0.16 netmask 255.255.255.252 {}
+  
+  #A8
+  subnet 192.221.0.20 netmask 255.255.255.252 {}
+  ' > /etc/dhcp/dhcpd.conf
+  
+  service isc-dhcp-server restart
+  ```
+- **Sein, Stark (Web Server)**
+  <br>Install `apt-get install apache2` kemudian lakukan `service apache2 start` untuk start server.
+  ```
+  echo 'nameserver 192.168.122.1 ' > /etc/resolv.conf
+
+  apt update
+  apt install netcat -y
+  apt install apache2 -y
+  service apache2 start
+  echo "$HOSTNAME" > /var/www/html/index.html
   ```
 - **Client**
   ```
