@@ -13,7 +13,7 @@ Berikut repository dari Kelompok E30 Praktikum Modul 5 Jaringan Komputer.
 <div align=justify>
 
 Berikut adalah topologi yang digunakan.<br>
-![soal](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/ed65cd54-71c1-44e8-9388-97040a74ca3e)
+<img width="600" alt="soal" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/ed65cd54-71c1-44e8-9388-97040a74ca3e">
 
 (A) Tugas pertama, buatlah peta wilayah sesuai tersebut.<br>
 - Richter adalah DNS Server
@@ -32,7 +32,7 @@ Berikut adalah topologi yang digunakan.<br>
 
 ### Pembagian Subnet
 Pertama, dibuat plotting subnettingnya.<br>
-![subnet drawio](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/dcfadf60-a796-48cf-80e7-54a4e7fc910e)
+<img width="600" alt="subnet" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/94d0af51-a44b-41c7-a112-71b749d44dae">
 
 Kemudian dilakukan labelling netmask berdasarkan jumlah IP yang dibutuhkan.<br>
 ![rute](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/1e6a2bda-bb23-40f6-9bb6-f465e3b09aa9)
