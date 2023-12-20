@@ -12,9 +12,8 @@ Berikut repository dari Kelompok E30 Praktikum Modul 5 Jaringan Komputer.
 # **Soal**
 <div align=justify>
 
-Berikut adalah topologi yang digunakan. 
-
-
+Berikut adalah topologi yang digunakan.<br>
+![soal](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/ed65cd54-71c1-44e8-9388-97040a74ca3e)
 
 (A) Tugas pertama, buatlah peta wilayah sesuai tersebut.<br>
 - Richter adalah DNS Server
@@ -32,26 +31,21 @@ Berikut adalah topologi yang digunakan.
 ## **VLSM**
 
 ### Pembagian Subnet
-Pertama, dibuat plotting subnettingnya.
+Pertama, dibuat plotting subnettingnya.<br>
+![subnet drawio](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/dcfadf60-a796-48cf-80e7-54a4e7fc910e)
 
-
-
-Kemudian dilakukan labelling netmask berdasarkan jumlah IP yang dibutuhkan.
-
-
+Kemudian dilakukan labelling netmask berdasarkan jumlah IP yang dibutuhkan.<br>
+![rute](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/1e6a2bda-bb23-40f6-9bb6-f465e3b09aa9)
 
 ### Tree
-Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutuhan masing-masing subnet yang ada. Dimulai dari 192.221.0.0/20 kemudian bagi menjadi dua bagian, lakukan cara yang sama hingga 192.221.x.x/30.
-
-
+Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutuhan masing-masing subnet yang ada. Dimulai dari 192.221.0.0/20 kemudian bagi menjadi dua bagian, lakukan cara yang sama hingga 192.221.x.x/30.<br>
+![tree drawio](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/700d92d9-d04c-451f-8ff9-10a03680f031)
 
 ### VLSM-IP
-
-
+![pembagian_ip](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/833dcdf3-e99c-45bd-aea9-6bf7d709e344)
 
 ### Konfigurasi Node
-
-
+![config](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/6d822ec5-c21c-4719-a4a1-846e1845be14)
 
 - **Aura**
   ```
@@ -200,8 +194,7 @@ Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutu
   ```
   
 ### Konfigurasi Routing
-
-
+![routing](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/418b001a-8d58-48b0-b20e-df9e6b7b6c31)
 
 - **Fern**
   ```
