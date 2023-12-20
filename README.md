@@ -410,23 +410,51 @@ Selanjutnya dilakukan pembagian IP Address menggunakan tree sesuai dengan kebutu
 ## **Soal Nomor 1**
 Agar topologi yang kalian buat dapat mengakses keluar, kalian diminta untuk mengkonfigurasi Aura menggunakan iptables, tetapi tidak ingin menggunakan MASQUERADE.
 ## **Script Nomor 1**
+Cek IP dari Aura yang berhubungan dengan NAT menggunakan command `ip -br a`. Karena diminta untuk tidak menggunakan MASQUERADE, maka digunakan SNAT. Source akan diubah dari yang awalnya 0.0 ke Aura dengan `--to-source IPETH0`.
 - Aura
   ```
   IPETH0="$(ip -br a | grep eth0 | awk '{print $NF}' | cut -d'/' -f1)"
   iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source "$IPETH0" -s 192.221.0.0/20
   ```
+  Keterangan:
+  - `ip -br a`: Memberi list network interface dan konfigurasinya
+  - `grep eth0`: Filter output
+  - `awk '{print $NF}'`: Mengambil last column, yaitu IP address and subnet
+  - `cut -d'/' -f1`: Mengambil IP address dengan memisah string dengan length
+  - `iptables -t nat`: Menggunakan nat
+  - `-A POSTROUTING`: Menambahkan chain POSTROUTING
+  - `-o eth0`: Out interface network eth0
+  - `-j SNAT`: SNAT untuk memodikasi source address
+  - `--to-source "$IPETH0"`: Source SNAT eth0
+
 ### Testing
+Cek apakah eth0 pada setiap client sudah berada dalam range yang ada di dalam tree. Lakukan ping google.com pada tiap client.
+
+
 
 ## **Soal Nomor 2**
 Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
 ## **Script Nomor 2**
+Untuk melakukan filtering, perlu mendefinisikan protokol TCP dan destination port 8080 untuk paket diterima. Dilakukan juga definisi protokol lain yang digunakan untuk didrop.
+> Script dijalankan pada **Revolte** dengan command `bash no2.sh`
 - Revolte
   ```
   iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
   iptables -A INPUT -p tcp -j DROP # Drop semua TCP
   iptables -A INPUT -p udp -j DROP # Drop semua UDP
   ```
+  Keterangan:
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `-p tcp`: Mendefinisikan protokol yang digunakan, yaitu tcp
+  - `-p udp`: Mendefinisikan protokol yang digunakan, yaitu udp
+  - `--dport 8080`: Mendefinisikan destination port paket, yaitu 8080
+  - `-j ACCEPT`: Mengizinkan paket data, paket diterima
+  - `-j DROP`: Menolak paket data, paket didrop
+
 ### Testing
+Cek pada client menuju Revolte menggunakan netcat untuk TCP dan UDP.
+
+
 
 ## **Soal Nomor 3**
 Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
@@ -435,6 +463,8 @@ Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya 
   ```
   iptables -I INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
   ```
+  Keterangan:
+  
 ### Testing
 
 ## **Soal Nomor 4**
