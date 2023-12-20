@@ -620,3 +620,5 @@ Dilakukan dengan menambahkan chain ke input agar paket tercatat jika didrop.
   - `-j DROP`: Paket didrop
     
 ### Testing
+Dilihat rules dengan `iptables -L`.<br>
+<img width="700" alt="no10" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/34fec51d-89eb-44bc-affe-75ea94f1ef19">
