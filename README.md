@@ -459,47 +459,88 @@ Cek pada client menuju Revolte menggunakan netcat untuk TCP dan UDP.
 ## **Soal Nomor 3**
 Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
 ## **Script Nomor 3**
+Untuk membatasi DHCP dan DNS Server digunakan `connlimit` untuk menolak koneksi ICMP yang masuk, jika jumlah koneksi melebihi limit 3.
+> Script dijalankan pada **Revolte, Richter** dengan command `bash no3.sh`
 - Revolte, Richter
   ```
   iptables -I INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
   ```
   Keterangan:
-  
+  - `iptables -I INPUT`: Menggunakan chain INPUT
+  - `-p icmp`: Mendefinisikan protokol yang digunakan, yaitu ICMP (ping)
+  - `-m connlimit`: Menggunakan match modul connection limit
+  - `--connlimit-above 3`: Mencocokkan jumlah koneksi tcp yang ada tidak di atas 3
+  - `--connlimit-mask 0`: Hanya memperbolehkan 3 koneksi setiap subnet dalam satu waktu
+  - `-j DROP`: Paket didrop
+
 ### Testing
+Cek pada lebih dari 3 client menuju Revolte dengan ping.
+
+
 
 ## **Soal Nomor 4**
 Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
 ## **Script Nomor 4**
+Melakukan drop paket pada Web Server dengan koneksi SSH, kecuali pada client `GrobeForest`. Akan dicek IP dengan command `ip a` karena IP client selalu berganti.
+> Script dijalankan pada **Sein, Stark** dengan command `bash no4.sh`
 - Sein, Stark
   ```
   iptables -A INPUT -p tcp --dport 22 -s <IP GrobeForest> -j ACCEPT
   iptables -A INPUT -p tcp --dport 22 -j DROP
   ```
+  Keterangan:
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `-p tcp`: Mendefinisikan protokol yang digunakan, yaitu tcp
+  - `--dport 22`: Mendefinisikan destination port paket, yaitu 22 (port SSH)
+  - `-s <IP GrobeForest>`: Menentukan sumber address yang digunakan, hanya IP dari GrobeForest yang diaccept
+  - `-j ACCEPT`: Paket diterima
+  - `-j DROP`: Paket didrop
+
 ### Testing
+Cek pada client menuju Sein menggunakan netcat untuk port 22.
+
+
 
 ## **Soal Nomor 5**
-Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
+Selain itu, akses menuju Web Server hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
 ## **Script Nomor 5**
+Melakukan pembatasan paket menuju Web Server, kecuali pada jam kerja Senin-Jumat pada pukul 08.00-16.00.
+> Script dijalankan pada **Sein, Stark** dengan command `bash no5.sh`
+- Sein, Stark
+  ```
+  iptables -A INPUT -m time --timestart 08:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+  iptables -A INPUT -j REJECT
+  ```
+  Keterangan:
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `-m time`: Menggunakan modul time
+  - `--timestart 08:00`: Mendefinisikan waktu mulai yaitu 08:00
+  - `--timestop 16:00`: Mendefinisikan waktu berhenti yaitu 16:00
+  - `--weekdays Mon,Tue,Wed,Thu,Fri`: Membatasi rule berlaku hanya untuk weekdays (Senin-Jumat)
+  - `-j ACCEPT`: Paket diterima
+  - `-j REJECT`: Paket ditolak
 
 ### Testing
+Cek pada client menuju Sein dengan ping pada waktu tertentu.
+
+
 
 ## **Soal Nomor 6**
 Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 ## **Script Nomor 6**
 - Sein, Stark
   ```
-  iptables -A INPUT -m time --timestart 08:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
-  iptables -A INPUT -j REJECT
+  iptables -I INPUT -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j REJECT
+  iptables -I INPUT -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j REJECT
   ```
 ### Testing
 
 ## **Soal Nomor 7**
 Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 ## **Script Nomor 7**
+
 - Sein, Stark
   ```
-  iptables -I INPUT -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j REJECT
-  iptables -I INPUT -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j REJECT
   ```
 ### Testing
 
