@@ -539,9 +539,25 @@ Cek pada client menuju Sein dengan ping pada waktu tertentu.<br>
 ## **Soal Nomor 7**
 Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 ## **Script Nomor 7**
-- Sein, Stark
+Konfigurasi untuk masing-masing node adalah 80 dan 443 menggunakan --dport, serta akan dibatasi secara bergantian menggunakan --every 2. Oleh karena itu, distribusinya akan dilakukan secara bergantian dengan mengarahkan ke node lain menggunakan -to-destination.
+
+> Script dijalankan pada **Heiter** dengan command `bash no7.sh`
+- Heiter
   ```
+  iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.221.4.2 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.221.4.2:80
+  iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.221.4.2 -j DNAT --to-destination 192.221.0.14:80
+  iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.221.0.14 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.221.0.14:443
+  iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.221.0.14 -j DNAT --to-destination 192.221.4.2:443
   ```
+  Keterangan:
+  - `iptables -A PREROUTING`: Menggunakan chain PREROUTING
+  - `-t nat`: Menggunakan table nat
+  - `-p tcp`: Mendefinisikan protokol yang digunakan, yaitu tcp
+  - `--dport 80`: Mendefinisikan destination port paket, yaitu 80
+  - `--dport 443`: Mendefinisikan destination port paket, yaitu 443
+  - `-d 192.221.4.2`: Mendefinisikan destination address 192.221.4.2 (Sein)
+  - `-d 192.221.0.14`: Mendefinisikan destination address 192.221.0.14 (Stark)
+        
 ### Testing
 
 ## **Soal Nomor 8**
