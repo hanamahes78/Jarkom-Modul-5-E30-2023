@@ -580,9 +580,10 @@ Cek pada Revolte menuju Sein dengan ping pada waktu tertentu.
 
 
 ## **Soal Nomor 9**
-Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit.
+Sadar akan adanya potensial saling serang antar kubu politik, maka Web Server harus dapat secara otomatis memblokir alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit.
 (clue: test dengan nmap)
 ## **Script Nomor 9**
+Membatasi alamat IP pada Web Server dengan membuat list IP address dinamis, kemudian dicocokkan dengan list tersebut dengan rule yang digunakan. Paket akan di drop jika terjadi lebih dari 20 update dalam waktu 10 menit.
 - Sein, Stark
   ```
   iptables -N scanport
@@ -591,7 +592,23 @@ Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer har
   iptables -A INPUT -m recent --name scanport --set -j ACCEPT
   iptables -A FORWARD -m recent --name scanport --set -j ACCEPT
   ```
+  Keterangan:
+  - `iptables -N scanport`: Membuat chain baru dengan nama scanport
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `iptables -A FORWARD`: Menggunakan chain FORWARD
+  - `-m recent`: Menggunakan modul recent untuk membandingkan list
+  - `--name scanport`: List nama yang akan digunakan untuk commands
+  - `--update`: Mengupdate "last seen" timestamp jika sesuai
+  - `--seconds 600`: Mencocokkan agar hanya terjadi saat alamat IP ada pada list dan dalam 600 detik (10 menit) terakhir
+  - `--hitcount 20`: Mencocokkan agar hanya terjadi saat alamat IP ada pada list dan paket telah diterima lebih besar atau sama dengan nilai yang diberikan sehingga melanjutkan aksi
+  - `--set`: Menambahkan source address paket ke list
+  - `-j DROP`: Paket didrop
+  - `-j ACCEPT`: Paket diterima
+    
 ### Testing
+Cek pada client menuju Sein dengan ping 20 kali.
+
+
 
 ## **Soal Nomor 10**
 Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
