@@ -560,6 +560,12 @@ Konfigurasi untuk masing-masing node 80 dan 443 menggunakan `--dport`. Akan diba
   - `--to-destination`: Menentukan destination address baru
         
 ### Testing
+Melakukan curl pada client.
+```
+curl 192.221.4.2:80
+curl 192.221.0.14:443
+```
+<img width="700" alt="no7" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/ea927aba-5e61-4312-8b26-51a48e45d39a">
 
 ## **Soal Nomor 8**
 Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses Web Server hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
