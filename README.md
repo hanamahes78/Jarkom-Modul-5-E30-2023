@@ -526,35 +526,61 @@ Cek pada client menuju Sein dengan ping pada waktu tertentu.
 
 
 ## **Soal Nomor 6**
-Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
+Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari Web Server tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 ## **Script Nomor 6**
+Melakukan pembatasan paket menuju Web Server, kecuali pada jam kerja pada waktu yang ditetapkan.
+> Script dijalankan pada **Sein, Stark** dengan command `bash no6.sh`
 - Sein, Stark
   ```
   iptables -I INPUT -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j REJECT
   iptables -I INPUT -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j REJECT
   ```
+  Keterangan:
+  - `iptables -I INPUT`: Menggunakan chain INPUT
+  - `-m time`: Menggunakan modul time
+  - `--timestart 12:00`, `--timestart 11:00`: Mendefinisikan waktu mulai yaitu 12:00 dan 11.00
+  - `--timestop 13:00`: Mendefinisikan waktu berhenti yaitu 13:00
+  - `--weekdays Mon,Tue,Wed,Thu`, `--weekdays Fri`: Membatasi rule berlaku hanya untuk weekdays (Senin-Kamis, Jumat)
+  - `-j REJECT`: Paket ditolak
+  
 ### Testing
+Cek pada client menuju Sein dengan ping pada waktu tertentu.
+
+
 
 ## **Soal Nomor 7**
 Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 ## **Script Nomor 7**
-
 - Sein, Stark
   ```
   ```
 ### Testing
 
 ## **Soal Nomor 8**
-Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
+Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses Web Server hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 ## **Script Nomor 8**
+Melakukan pembatasan paket menuju Web Server, hingga masa pencoblosan pemilu yaitu 19 Oktober 2023 hingga 15 Februari 2024.
+> Script dijalankan pada **Sein, Stark** dengan command `bash no8.sh`
 - Sein, Stark
   ```
   iptables -A INPUT -p tcp --dport 80 -s 192.221.0.0/30 -m time --datestart 2023-10-19 --datestop 2024-02-15 -j DROP
   ```
+  Keterangan:
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `-p tcp`: Mendefinisikan protokol yang digunakan, yaitu tcp
+  - `--dport 80`: Mendefinisikan destination port paket, yaitu 80
+  - `-s 192.221.0.0/30`: Menentukan sumber address yang digunakan, hanya IP subnet A1 yang diizinkan
+  - `--datestart 2023-10-19`: Mendefinisikan waktu mulai yaitu 2023-10-19
+  - `--datestop 2024-02-15`: Mendefinisikan waktu berhenti yaitu 2024-02-15
+  - `-j DROP`: Paket didrop
+  
 ### Testing
+Cek pada Revolte menuju Sein dengan ping pada waktu tertentu.
+
+
 
 ## **Soal Nomor 9**
-Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. 
+Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit.
 (clue: test dengan nmap)
 ## **Script Nomor 9**
 - Sein, Stark
