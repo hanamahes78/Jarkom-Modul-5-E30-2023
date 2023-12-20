@@ -421,9 +421,8 @@ Cek IP dari Aura yang berhubungan dengan NAT menggunakan command `ip -br a`. Kar
   - `--to-source "$IPETH0"`: Source SNAT eth0
 
 ### Testing
-Cek apakah eth0 pada setiap client sudah berada dalam range yang ada di dalam tree. Lakukan ping google.com pada tiap client.
-
-
+Cek apakah eth0 pada setiap client sudah berada dalam range yang ada di dalam tree. Lakukan ping google.com pada tiap client.<br>
+![no1](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/174a8ba1-1fdc-4c79-8421-40c77884503b)
 
 ## **Soal Nomor 2**
 Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
@@ -445,9 +444,8 @@ Untuk melakukan filtering, perlu mendefinisikan protokol TCP dan destination por
   - `-j DROP`: Menolak paket data, paket didrop
 
 ### Testing
-Cek pada client menuju Revolte menggunakan netcat untuk TCP dan UDP.
-
-
+Cek pada client menuju Revolte menggunakan netcat untuk TCP dan UDP.<br>
+![no2](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/ceb6456d-27b7-4db5-ad83-dc8aeca900e6)
 
 ## **Soal Nomor 3**
 Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
@@ -467,9 +465,8 @@ Untuk membatasi DHCP dan DNS Server digunakan `connlimit` untuk menolak koneksi 
   - `-j DROP`: Paket didrop
 
 ### Testing
-Cek pada lebih dari 3 client menuju Revolte dengan ping.
-
-
+Cek pada lebih dari 3 client menuju Revolte dengan ping.<br>
+![no3](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/93c2f7ca-f460-4fc1-a216-a17e8a224663)
 
 ## **Soal Nomor 4**
 Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
@@ -490,9 +487,9 @@ Melakukan drop paket pada Web Server dengan koneksi SSH, kecuali pada client `Gr
   - `-j DROP`: Paket didrop
 
 ### Testing
-Cek pada client menuju Sein menggunakan netcat untuk port 22.
-
-
+Cek pada client menuju Sein menggunakan netcat untuk port 22.<br>
+<img width="700" alt="no4_ipa" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/f398b1f1-e64f-41e6-b185-51301d126361">
+![no4](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/18e389b1-5b82-491d-bfa3-cac26fcbe97e)
 
 ## **Soal Nomor 5**
 Selain itu, akses menuju Web Server hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
@@ -514,9 +511,8 @@ Melakukan pembatasan paket menuju Web Server, kecuali pada jam kerja Senin-Jumat
   - `-j REJECT`: Paket ditolak
 
 ### Testing
-Cek pada client menuju Sein dengan ping pada waktu tertentu.
-
-
+Cek pada client menuju Sein dengan ping pada waktu tertentu.<br>
+![no5](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/8c8de27f-8728-43dd-b1e8-c465cba6bb9a)
 
 ## **Soal Nomor 6**
 Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari Web Server tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
@@ -537,9 +533,8 @@ Melakukan pembatasan paket menuju Web Server, kecuali pada jam kerja pada waktu 
   - `-j REJECT`: Paket ditolak
   
 ### Testing
-Cek pada client menuju Sein dengan ping pada waktu tertentu.
-
-
+Cek pada client menuju Sein dengan ping pada waktu tertentu.<br>
+![no6](https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/5e75f017-a6cf-472c-ad73-ed58567a747a)
 
 ## **Soal Nomor 7**
 Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
@@ -599,9 +594,8 @@ Membatasi alamat IP pada Web Server dengan membuat list IP address dinamis, kemu
   - `-j ACCEPT`: Paket diterima
     
 ### Testing
-Cek pada client menuju Sein dengan ping 20 kali.
-
-
+Cek pada client menuju Sein dengan ping 20 kali.<br>
+<img width="700" alt="no9" src="https://github.com/hanamahes78/Jarkom-Modul-5-E30-2023/assets/108173681/baa3102a-28b2-4ab0-a39f-6e1f13474cea">
 
 ## **Soal Nomor 10**
 Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
