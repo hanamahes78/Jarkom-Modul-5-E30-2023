@@ -572,6 +572,7 @@ Sadar akan adanya potensial saling serang antar kubu politik, maka Web Server ha
 (clue: test dengan nmap)
 ## **Script Nomor 9**
 Membatasi alamat IP pada Web Server dengan membuat list IP address dinamis, kemudian dicocokkan dengan list tersebut dengan rule yang digunakan. Paket akan di drop jika terjadi lebih dari 20 update dalam waktu 10 menit.
+> Script dijalankan pada **Sein, Stark** dengan command `bash no9.sh`
 - Sein, Stark
   ```
   iptables -N scanport
@@ -600,5 +601,22 @@ Cek pada client menuju Sein dengan ping 20 kali.<br>
 ## **Soal Nomor 10**
 Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
 ## **Script Nomor 10**
-
+Dilakukan dengan menambahkan chain ke input agar paket tercatat jika didrop.
+> Script dijalankan pada **Server, Router** dengan command `bash no10.sh`
+- Server, Router
+  ```
+  iptables -N LOGGING
+  iptables -A INPUT -j LOGGING
+  iptables -A LOGGING -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+  iptables -A LOGGING -j DROP
+  ```
+  Keterangan:
+  - `iptables -N LOGGING`: Membuat chain baru dengan nama LOGGING
+  - `iptables -A INPUT`: Menggunakan chain INPUT
+  - `iptables -A FORWARD`: Menggunakan chain LOGGING
+  - `-j LOG`: Mencocokkan paket dengan rule, jika cocok maka dicatat
+  - `--log-prefix`: Memberi prefix messages di log, yaitu "IPTables-Dropped: "
+  - `--log-level 4`: Menggunakan log level 4 untuk menampilkan info
+  - `-j DROP`: Paket didrop
+    
 ### Testing
